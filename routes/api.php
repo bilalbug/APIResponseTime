@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiResponseController;
+use App\Http\Controllers\OfficeIpAddressController;
+use App\Http\Controllers\EmployeesAttendanceRecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +21,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/', [ApiResponseController::class, 'APIResponseUserTimeLocation']);
+//get data from mock API
+Route::get('/time', [ApiResponseController::class, 'APIResponseUserTimeLocation']);
+
+//this is for storing record in DB
+Route::get('/records/all', [EmployeesAttendanceRecordController::class, 'index']);
+
+//office IP Show/Store/Update/Delete
+Route::get('/ip', [OfficeIpAddressController::class, 'index']);
+Route::post('/ip', [OfficeIpAddressController::class, 'store']);
+Route::get('/ip/{ipAddress}', [OfficeIpAddressController::class, 'show']);
+Route::put('/ip/{ipAddress}', [OfficeIpAddressController::class, 'update']);
+Route::delete('/ip/{ipAddress}', [OfficeIpAddressController::class, 'destroy']);
+
+
