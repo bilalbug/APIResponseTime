@@ -13,4 +13,5 @@ class EmployeesAttendanceRecordController extends Controller
 
         return response()->json($records);
     }
+
 }

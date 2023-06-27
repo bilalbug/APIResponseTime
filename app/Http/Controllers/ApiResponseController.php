@@ -42,17 +42,17 @@ class ApiResponseController extends Controller
                     }
 
                     if ($totalTime !== null) {
-                        $timeInMinutes = $this->convertTimeToMinutes($totalTime);
-                        $users[$email]['hours'] += floor($timeInMinutes / 60);
-                        $users[$email]['minutes'] += $timeInMinutes % 60;
+                        list($hours, $minutes) = explode(':', $totalTime);
+                        $users[$email]['hours'] += (int)$hours;
+                        $users[$email]['minutes'] += (int)$minutes;
 
                         if (!empty($ipAddress)) {
                             $location = OfficeIpAddress::where('router_address', $ipAddress)->value('location');
                             if ($location !== null) {
-                                $users[$email]['locations'][$location] = isset($users[$email]['locations'][$location]) ? $users[$email]['locations'][$location] + $timeInMinutes : $timeInMinutes;
-                                $users[$email]['timeInOffice'] += $timeInMinutes;
+                                $users[$email]['locations'][$location] = isset($users[$email]['locations'][$location]) ? $users[$email]['locations'][$location] + $this->convertTimeToMinutes($totalTime) : $this->convertTimeToMinutes($totalTime);
+                                $users[$email]['timeInOffice'] += $this->convertTimeToMinutes($totalTime);
                             } else {
-                                $users[$email]['locations']['Remote'] = isset($users[$email]['locations']['Remote']) ? $users[$email]['locations']['Remote'] + $timeInMinutes : $timeInMinutes;
+                                $users[$email]['locations']['Remote'] = isset($users[$email]['locations']['Remote']) ? $users[$email]['locations']['Remote'] + $this->convertTimeToMinutes($totalTime) : $this->convertTimeToMinutes($totalTime);
                             }
                         }
                     }
@@ -62,7 +62,7 @@ class ApiResponseController extends Controller
                     }
                 }
 
-                //day status
+                // Calculate day status
                 foreach ($users as &$user) {
                     $totalMinutes = $user['timeInOffice'];
 
@@ -75,7 +75,7 @@ class ApiResponseController extends Controller
                     }
                 }
 
-                // Convert minutes to hours for Office hours
+                // Convert minutes to hours if necessary
                 foreach ($users as &$user) {
                     if ($user['minutes'] >= 60) {
                         $extraHours = floor($user['minutes'] / 60);
@@ -83,6 +83,25 @@ class ApiResponseController extends Controller
                         $user['minutes'] %= 60;
                     }
                 }
+
+                // Store data in EmployeesAttendanceRecord model
+                foreach ($users as $email => $data) {
+                    // Check if the record already exists for the given date and email
+                    $existingRecord = EmployeesAttendanceRecord::where('email', $email)->where('date', $data['date'])->first();
+
+                    if (!$existingRecord) {
+                        $attendanceRecord = new EmployeesAttendanceRecord();
+                        $attendanceRecord->email = $email;
+                        $attendanceRecord->hours = $data['hours'];
+                        $attendanceRecord->minutes = $data['minutes'];
+                        $attendanceRecord->time_in_office = $data['timeInOffice'];
+                        $attendanceRecord->locations = json_encode($data['locations']); // Convert array to JSON string
+                        $attendanceRecord->date = $data['date'];
+                        $attendanceRecord->day_status = $data['day_status'];
+                        $attendanceRecord->save();
+                    }
+                }
+
 
                 return response()->json($users);
             } else {
@@ -92,7 +111,6 @@ class ApiResponseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
     private function convertTimeToMinutes($time)
     {

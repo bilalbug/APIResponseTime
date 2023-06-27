@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //get data from mock API
-Route::get('/time', [ApiResponseController::class, 'APIResponseUserTimeLocation']);
+Route::get('/response', [ApiResponseController::class, 'APIResponseUserTimeLocation']);
 
 //this is for storing record in DB
 Route::get('/records/all', [EmployeesAttendanceRecordController::class, 'index']);
