@@ -7,9 +7,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    protected $commands = [
-        Commands\APIResponseCommand::class,
-        ];
     /**
      * Define the application's command schedule.
      *
@@ -18,10 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            // Call the APIResponseUserTimeLocation() function
-            app('App\Http\Controllers\ApiResponseController')->APIResponseUserTimeLocation();
-        })->everyFifteenMinutes();
+        $schedule->command('api:process-response')->daily();
     }
 
     /**
