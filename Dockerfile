@@ -53,9 +53,9 @@ RUN php artisan key:generate
 RUN php artisan config:cache
 
 # Expose port 80 and start Apache service
-EXPOSE 8000
-CMD ["apache2-foreground"]
-
-## Expose port 8000 and start the Laravel server
 #EXPOSE 8000
-#CMD ["php", "artisan", "serve", "--host=0.0.0.0:8000"]
+#CMD ["apache2-foreground"]
+
+# Expose port 8000 and start the Laravel server
+EXPOSE 8000
+CMD ["php", "artisan", "serve", "--host=0.0.0.0:8000"]

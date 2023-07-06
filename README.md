@@ -35,28 +35,27 @@ The project follows the standard Laravel file structure. Key files and directori
 - `app/Models/EmployeesAttendanceRecord.php`: Represents the model for storing attendance records.
 - `routes/api.php`: Defines the project's routes.
 
+## Git
+
+To view the Git commits in your terminal, use the `git log` command. This command displays a list of commits in reverse chronological order. You can use various options and filters with `git log` to customize the output.
+
+You can clone this Git repository at https://github.com/httpbilal/APIResponseTime.git
+
+## Docker
+
+To run the project using Docker, follow these steps:
+
+1. Build the Docker image by running `docker build -t attendance-app .` (replace `attendance-app` with your desired image name).
+2. Start the Docker container with the following command: `docker run -p 8000:80 attendance-app` (replace `attendance-app` with your image name).
+3. Access the application in your browser at `http://localhost:8000`.
+
+Make sure you have Docker installed and running on your machine before executing these commands.
+
+You can access the Docker repository of my existing image at https://hub.docker.com/r/bilalbug/attendance-app
+
 ## Contributing
 
 Contributions to the project are welcome. If you encounter any issues or have suggestions for improvements, please submit an issue or pull request on the project's GitHub repository.
-
-## Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. It takes the pain out of development by easing common tasks used in many web projects. Some of its key features include:
-
-- Simple, fast routing engine
-- Powerful dependency injection container
-- Multiple back-ends for session and cache storage
-- Expressive, intuitive database ORM
-- Database agnostic schema migrations
-- Robust background job processing
-- Real-time event broadcasting
-
-For more details, visit the [Laravel website](https://laravel.com).
-
-## Learning Laravel
-
-Laravel has extensive and thorough [documentation](https://laravel.com/docs) and a video tutorial library called [Laracasts](https://laracasts.com). Laracasts contains over 2000 video tutorials on Laravel, modern PHP, unit testing, and JavaScript. You can enhance your skills by exploring their comprehensive video library.
-
 
 ## License
 
